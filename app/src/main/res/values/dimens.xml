@@ -2,4 +2,6 @@
 <resources>
     <dimen name="notes_activity_vertical_margin">8dp</dimen>
     <dimen name="notes_activity_horizontal_margin">8dp</dimen>
+    <dimen name="text_s">10sp</dimen>
+    <dimen name="text_m">12sp</dimen>
 </resources>

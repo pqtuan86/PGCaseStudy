@@ -1,6 +1,7 @@
 package com.example.tuanpham.pgcasestudy.stories;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -34,6 +35,8 @@ public class StoriesFragment extends Fragment implements StoriesContract.View {
 
     private StoriesAdapter storiesAdapter;
 
+    private RecyclerView recyclerView;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -60,10 +63,11 @@ public class StoriesFragment extends Fragment implements StoriesContract.View {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_stories, container, false);
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.stories_list);
+        recyclerView = (RecyclerView) view.findViewById(R.id.stories_list);
         recyclerView.setAdapter(storiesAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        setListStoriesScrollChangedListener();
 
         SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(
@@ -77,6 +81,40 @@ public class StoriesFragment extends Fragment implements StoriesContract.View {
             }
         });
         return view;
+    }
+
+    @SuppressWarnings("deprecation")
+    private void setListStoriesScrollChangedListener() {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
+            recyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(View view, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                    onScroll((RecyclerView) view, storiesAdapter.getCurrentCursor());
+                }
+            });
+        } else {
+            recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    onScroll(recyclerView, storiesAdapter.getCurrentCursor());
+                }
+            });
+        }
+    }
+
+    private void onScroll(RecyclerView recyclerView, int currentCursor) {
+        if (recyclerView.getVisibility() == View.GONE) {
+            return;
+        }
+        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+        int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+        if (lastVisibleItem != -1) {
+            if ((currentCursor - lastVisibleItem) < 25) {
+                getStoriesDetails();
+            }
+        }
     }
 
     @Override
@@ -119,6 +157,15 @@ public class StoriesFragment extends Fragment implements StoriesContract.View {
     @Override
     public void showItems(List<Story> stories) {
         storiesAdapter.replaceData(stories);
+
+        getStoriesDetails();
+    }
+
+    private void getStoriesDetails() {
+        int[] ids = storiesAdapter.getNextStoriesIds();
+        for (int storyId : ids) {
+            userActionsListener.getStory(storyId);
+        }
     }
 
     @Override
@@ -126,10 +173,18 @@ public class StoriesFragment extends Fragment implements StoriesContract.View {
         // Open story detail
     }
 
+    @Override
+    public void populateStoryDetails(Story story) {
+        storiesAdapter.populateStoryDetails(story);
+    }
+
     private static class StoriesAdapter extends RecyclerView.Adapter<StoriesAdapter.ViewHolder> {
 
+        private static final int MAX_ROW_PER_LOAD = 40;
         private List<Story> stories;
         private StoryItemListener itemListener;
+        private int cursor = 0;
+
 
         public StoriesAdapter(List<Story> stories, StoryItemListener itemListener) {
             setList(stories);
@@ -148,12 +203,15 @@ public class StoriesFragment extends Fragment implements StoriesContract.View {
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, int position) {
             Story story = stories.get(position);
-            viewHolder.title.setText(TextUtils.isEmpty(story.getTitle()) ? "missing title" : story.getTitle());
-            String infos = (story.getScore() != null ? story.getScore() : "0") + " points"
-                    + " by " + story.getBy()
-                    + UiUtils.getLatesUpdateTime(story.getTime()) + " | "
-                    + (story.getDescendants() != null ? story.getDescendants() : 0) + "comments";
-            viewHolder.description.setText(infos);
+            viewHolder.index.setText(position + ".");
+            if (!TextUtils.isEmpty(story.getTitle())) {
+                viewHolder.title.setText(TextUtils.isEmpty(story.getTitle()) ? "" : story.getTitle());
+                String infos = (story.getScore() != null ? story.getScore() : "0") + " points"
+                        + " by " + story.getBy() + " "
+                        + UiUtils.getLatesUpdateTime(story.getTime() != null ? story.getTime() : 0) + " | "
+                        + (story.getDescendants() != null ? story.getDescendants() : 0) + " comments";
+                viewHolder.description.setText(infos);
+            }
         }
 
         public void replaceData(List<Story> stories) {
@@ -161,9 +219,38 @@ public class StoriesFragment extends Fragment implements StoriesContract.View {
             notifyDataSetChanged();
         }
 
+        public void populateStoryDetails(Story story) {
+            int storyPos = stories.indexOf(story);
+            stories.set(storyPos, story);
+            notifyItemChanged(storyPos);
+        }
+
+        public int[] getNextStoriesIds() {
+            int[] range = null;
+            if (cursor < stories.size()) {
+                if (cursor + MAX_ROW_PER_LOAD < stories.size()) {
+                    range = new int[MAX_ROW_PER_LOAD];
+                } else {
+                    range = new int[stories.size() - cursor];
+                }
+                for (int i = 0; i < range.length; i++) {
+                    range[i] = stories.get(cursor + i).getId();
+                }
+                cursor += MAX_ROW_PER_LOAD;
+                if (cursor > stories.size()) {
+                    cursor = stories.size() - 1;
+                }
+            }
+            return range;
+        }
+
+        public int getCurrentCursor() {
+            return cursor;
+        }
+
         private void setList(List<Story> stories) {
             if (stories == null) {
-                throw new NullPointerException("stories can not be null");
+                throw new NullPointerException("storiesWithoutDetails can not be null");
             }
             this.stories = stories;
         }
@@ -179,14 +266,15 @@ public class StoriesFragment extends Fragment implements StoriesContract.View {
 
         public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+            public TextView index;
             public TextView title;
-
             public TextView description;
             private StoryItemListener mItemListener;
 
             public ViewHolder(View itemView, StoryItemListener listener) {
                 super(itemView);
                 mItemListener = listener;
+                index = (TextView) itemView.findViewById(R.id.tv_story_index);
                 title = (TextView) itemView.findViewById(R.id.tv_story_title);
                 description = (TextView) itemView.findViewById(R.id.tv_story_additional_infos);
                 itemView.setOnClickListener(this);

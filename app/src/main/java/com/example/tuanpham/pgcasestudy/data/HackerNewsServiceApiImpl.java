@@ -2,6 +2,7 @@ package com.example.tuanpham.pgcasestudy.data;
 
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -30,11 +31,11 @@ public class HackerNewsServiceApiImpl implements StoriesServiceApi {
     }
 
     @Override
-    public void getTopStories(final ItemsServiceCallback<int[]> callback) {
+    public void getTopStories(final ItemsServiceCallback<List<Story>> callback) {
         apiEndpoint.getTopStories().enqueue(new Callback<int[]>() {
             @Override
             public void onResponse(Call<int[]> call, Response<int[]> response) {
-                callback.onLoaded(response.body());
+                callback.onLoaded(toStoriesFromIds(response.body()));
             }
 
             @Override
@@ -44,12 +45,31 @@ public class HackerNewsServiceApiImpl implements StoriesServiceApi {
         });
     }
 
+    private List<Story> toStoriesFromIds(int[] ids) {
+        List<Story> stories = new ArrayList<>(ids.length);
+        for (int id : ids) {
+            Story story = new Story(id);
+            stories.add(story);
+        }
+        return stories;
+    }
+
     @Override
     public void getAllItems(final ItemsServiceCallback<List<Story>> callback) {
     }
 
     @Override
-    public void getItem(String itemId, ItemsServiceCallback<Story> callback) {
+    public void getSingleStory(int storyId, final ItemsServiceCallback<Story> callback) {
+        apiEndpoint.getStory(storyId).enqueue(new Callback<Story>() {
+            @Override
+            public void onResponse(Call<Story> call, Response<Story> response) {
+                callback.onLoaded(response.body());
+            }
 
+            @Override
+            public void onFailure(Call<Story> call, Throwable t) {
+
+            }
+        });
     }
 }

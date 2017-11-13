@@ -2,6 +2,8 @@ package com.example.tuanpham.pgcasestudy.data;
 
 import android.support.annotation.NonNull;
 
+import java.util.List;
+
 /**
  * Created by tuanpham on 11/4/17.
  */
@@ -15,6 +17,7 @@ public class InMemoryStoriesRepository implements StoriesRepository {
     public InMemoryStoriesRepository(@NonNull StoriesServiceApi storiesServiceApi) {
         this.storiesServiceApi = storiesServiceApi;
     }
+
     @Override
     public void getItems(@NonNull LoadItemsCallback callback) {
 
@@ -22,17 +25,22 @@ public class InMemoryStoriesRepository implements StoriesRepository {
 
     @Override
     public void getTopStories(@NonNull final GetTopStoryIdsCallback callback) {
-        storiesServiceApi.getTopStories(new StoriesServiceApi.ItemsServiceCallback<int[]>() {
+        storiesServiceApi.getTopStories(new StoriesServiceApi.ItemsServiceCallback<List<Story>>() {
             @Override
-            public void onLoaded(int[] items) {
+            public void onLoaded(List<Story> items) {
                 callback.onTopStoryIdsLoaded(items);
             }
         });
     }
 
     @Override
-    public void getItem(@NonNull String itemId, @NonNull GetItemCallback callback) {
-
+    public void getStory(@NonNull int storyId, @NonNull final GetItemCallback callback) {
+        storiesServiceApi.getSingleStory(storyId, new StoriesServiceApi.ItemsServiceCallback<Story>() {
+            @Override
+            public void onLoaded(Story item) {
+                callback.onItemLoaded(item);
+            }
+        });
     }
 
     @Override

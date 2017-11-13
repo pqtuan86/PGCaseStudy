@@ -19,14 +19,14 @@ public interface StoriesRepository {
     }
 
     interface GetTopStoryIdsCallback {
-        void onTopStoryIdsLoaded(int[] ids);
+        void onTopStoryIdsLoaded(List<Story> stories);
     }
 
     void getItems(@NonNull LoadItemsCallback callback);
 
     void getTopStories(@NonNull GetTopStoryIdsCallback callback);
 
-    void getItem(@NonNull String itemId, @NonNull GetItemCallback callback);
+    void getStory(@NonNull int storyId, @NonNull GetItemCallback callback);
 
     void refreshData();
 }

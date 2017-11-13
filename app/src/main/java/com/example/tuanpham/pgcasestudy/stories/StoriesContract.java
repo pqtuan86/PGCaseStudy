@@ -18,6 +18,8 @@ public interface StoriesContract {
         void showItems(List<Story> stories);
 
         void showItemDetail(String itemId);
+
+        void populateStoryDetails(Story story);
     }
 
     interface UserActionsListener {
@@ -29,5 +31,7 @@ public interface StoriesContract {
         void refreshItems();
 
         void openItem(@Nullable Story selectedStory);
+
+        void getStory(int storyId);
     }
 }

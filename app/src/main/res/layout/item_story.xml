@@ -2,14 +2,14 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="40dp">
 
     <TextView
         android:id="@+id/tv_story_index"
         android:layout_width="25dp"
         android:layout_height="wrap_content"
-        android:text="11."
-        android:gravity="right"/>
+        android:gravity="right"
+        android:textSize="@dimen/text_m"/>
 
     <TextView
         android:id="@+id/tv_story_title"
@@ -17,9 +17,10 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/tv_story_index"
         android:layout_marginLeft="10dp"
-        android:singleLine="true"
+        android:maxLines="1"
         android:ellipsize="end"
-        android:text="Story title"/>
+        android:textStyle="bold"
+        android:textSize="@dimen/text_m"/>
 
     <TextView
         android:id="@+id/tv_story_additional_infos"
@@ -27,6 +28,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_story_title"
         android:layout_alignLeft="@+id/tv_story_title"
-        android:text="Additional infos"/>
+        android:textSize="@dimen/text_s"/>
 
 </RelativeLayout>

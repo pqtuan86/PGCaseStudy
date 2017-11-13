@@ -12,9 +12,10 @@ public interface StoriesServiceApi {
         void onLoaded(T items);
     }
 
-    void getTopStories(ItemsServiceCallback<int[]> callback);
+    void getTopStories(ItemsServiceCallback<List<Story>> callback);
+
     void getAllItems(ItemsServiceCallback<List<Story>> callback);
 
-    void getItem(String itemId, ItemsServiceCallback<Story> callback);
+    void getSingleStory(int storyId, ItemsServiceCallback<Story> callback);
 
 }

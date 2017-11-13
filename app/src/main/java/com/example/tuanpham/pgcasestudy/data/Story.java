@@ -28,7 +28,7 @@ public class Story implements Serializable{
     @SerializedName("descendants")
     private Integer descendants;
     @SerializedName("id")
-    private Integer id;
+    private int id;
     @SerializedName("kids")
     private ArrayList<Integer> kids;
     @SerializedName("score")
@@ -41,6 +41,10 @@ public class Story implements Serializable{
     private String type;
     @SerializedName("url")
     private String url;
+
+    public Story(int id) {
+        this.id = id;
+    }
 
     public String getBy() {
         return by;
@@ -58,11 +62,11 @@ public class Story implements Serializable{
         this.descendants = descendants;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -112,5 +116,16 @@ public class Story implements Serializable{
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Story) {
+            Story story = (Story) obj;
+            if (this.id == story.getId()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -37,8 +37,8 @@ public class StoriesPresenter implements StoriesContract.UserActionsListener {
     public void getTopStories() {
         storiesRepository.getTopStories(new StoriesRepository.GetTopStoryIdsCallback() {
             @Override
-            public void onTopStoryIdsLoaded(int[] ids) {
-                Log.i("Top stories ids", String.valueOf(ids));
+            public void onTopStoryIdsLoaded(List<Story> stories) {
+                itemsView.showItems(stories);
             }
         });
     }
@@ -64,5 +64,15 @@ public class StoriesPresenter implements StoriesContract.UserActionsListener {
     @Override
     public void openItem(@Nullable Story selectedStory) {
         itemsView.showItemDetail(selectedStory.getId() + "");
+    }
+
+    @Override
+    public void getStory(int storyId) {
+        storiesRepository.getStory(storyId, new StoriesRepository.GetItemCallback() {
+            @Override
+            public void onItemLoaded(Story story) {
+                itemsView.populateStoryDetails(story);
+            }
+        });
     }
 }
