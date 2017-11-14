@@ -1,5 +1,8 @@
 package com.example.tuanpham.pgcasestudy.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -9,7 +12,7 @@ import java.util.ArrayList;
  * Created by tuanpham on 11/4/17.
  */
 
-public class Story implements Serializable{
+public class Story implements Serializable, Parcelable {
     /*
     "by" : "dhouston",
             "descendants" : 71,
@@ -26,15 +29,15 @@ public class Story implements Serializable{
     @SerializedName("by")
     private String by;
     @SerializedName("descendants")
-    private Integer descendants;
+    private int descendants;
     @SerializedName("id")
     private int id;
     @SerializedName("kids")
     private ArrayList<Integer> kids;
     @SerializedName("score")
-    private Integer score;
+    private int score;
     @SerializedName("time")
-    private Long time;
+    private long time;
     @SerializedName("title")
     private String title;
     @SerializedName("type")
@@ -44,6 +47,18 @@ public class Story implements Serializable{
 
     public Story(int id) {
         this.id = id;
+    }
+
+    public Story(Parcel in) {
+        by = in.readString();
+        descendants = in.readInt();
+        id = in.readInt();
+        if (in.readByte() == 0x01) {
+            kids = new ArrayList<>();
+            in.readList(kids, String.class.getClassLoader());
+        } else {
+            kids = null;
+        }
     }
 
     public String getBy() {
@@ -128,4 +143,39 @@ public class Story implements Serializable{
         }
         return false;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(by);
+        dest.writeInt(descendants);
+        dest.writeInt(id);
+        if (kids == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(kids);
+        }
+        dest.writeInt(score);
+        dest.writeLong(time);
+        dest.writeString(title);
+        dest.writeString(type);
+        dest.writeString(url);
+    }
+
+    public static final Parcelable.Creator<Story> CREATOR = new Parcelable.Creator<Story>() {
+        @Override
+        public Story createFromParcel(Parcel in) {
+            return new Story(in);
+        }
+
+        @Override
+        public Story[] newArray(int size) {
+            return new Story[size];
+        }
+    };
 }

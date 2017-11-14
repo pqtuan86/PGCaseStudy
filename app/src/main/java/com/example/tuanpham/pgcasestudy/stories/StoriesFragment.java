@@ -3,6 +3,7 @@ package com.example.tuanpham.pgcasestudy.stories;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -31,11 +32,15 @@ import java.util.List;
  */
 public class StoriesFragment extends Fragment implements StoriesContract.View {
 
+    private static final String LAST_VISIBLE_POS = "LAST_VISIBLE_POS";
+    private static final String RECYCLER_VIEW_STATE = "RECYCLER_VIEW_STATE";
     private StoriesContract.UserActionsListener userActionsListener;
 
     private StoriesAdapter storiesAdapter;
 
     private RecyclerView recyclerView;
+
+    private Parcelable recyclerViewState;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -64,9 +69,8 @@ public class StoriesFragment extends Fragment implements StoriesContract.View {
         View view = inflater.inflate(R.layout.fragment_stories, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.stories_list);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(storiesAdapter);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(linearLayoutManager);
         setListStoriesScrollChangedListener();
 
         SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
@@ -124,9 +128,30 @@ public class StoriesFragment extends Fragment implements StoriesContract.View {
     }
 
     @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            recyclerView.getLayoutManager().onRestoreInstanceState(savedInstanceState.getParcelable(RECYCLER_VIEW_STATE));
+            recyclerView.scrollToPosition(savedInstanceState.getInt(LAST_VISIBLE_POS));
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        recyclerViewState = recyclerView.getLayoutManager().onSaveInstanceState();
+        outState.putParcelable(RECYCLER_VIEW_STATE, recyclerViewState);
+        int lastScrollPos = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+        outState.putInt(LAST_VISIBLE_POS, lastScrollPos);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        userActionsListener.getTopStories();
+        if (storiesAdapter.getItemCount() == 0) {
+            userActionsListener.getTopStories();
+        }
     }
 
     private StoryItemListener listener = new StoryItemListener() {
@@ -257,7 +282,7 @@ public class StoriesFragment extends Fragment implements StoriesContract.View {
 
         @Override
         public int getItemCount() {
-            return stories.size();
+            return stories != null ? stories.size() : 0;
         }
 
         public Story getItem(int position) {
