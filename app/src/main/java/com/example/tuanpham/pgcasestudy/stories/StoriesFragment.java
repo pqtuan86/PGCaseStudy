@@ -81,7 +81,7 @@ public class StoriesFragment extends Fragment implements StoriesContract.View {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                userActionsListener.loadItems(true);
+                userActionsListener.getTopStories();
             }
         });
         return view;
@@ -277,6 +277,7 @@ public class StoriesFragment extends Fragment implements StoriesContract.View {
             if (stories == null) {
                 throw new NullPointerException("storiesWithoutDetails can not be null");
             }
+            cursor = 0;
             this.stories = stories;
         }
 

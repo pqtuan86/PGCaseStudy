@@ -35,10 +35,12 @@ public class StoriesPresenter implements StoriesContract.UserActionsListener {
 
     @Override
     public void getTopStories() {
+        itemsView.setProgressIndicator(true);
         storiesRepository.getTopStories(new StoriesRepository.GetTopStoryIdsCallback() {
             @Override
             public void onTopStoryIdsLoaded(List<Story> stories) {
                 itemsView.showItems(stories);
+                itemsView.setProgressIndicator(false);
             }
         });
     }
