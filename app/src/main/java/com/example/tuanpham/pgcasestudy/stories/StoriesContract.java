@@ -17,7 +17,7 @@ public interface StoriesContract {
 
         void showItems(List<Story> stories);
 
-        void showItemDetail(String itemId);
+        void showItemDetail(Story story);
 
         void populateStoryDetails(Story story);
     }
@@ -25,10 +25,6 @@ public interface StoriesContract {
     interface UserActionsListener {
 
         void getTopStories();
-
-        void loadItems(boolean forceUpdate);
-
-        void refreshItems();
 
         void openItem(@Nullable Story selectedStory);
 

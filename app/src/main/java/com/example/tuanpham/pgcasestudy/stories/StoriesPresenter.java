@@ -2,9 +2,8 @@ package com.example.tuanpham.pgcasestudy.stories;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
-import com.example.tuanpham.pgcasestudy.data.StoriesRepository;
+import com.example.tuanpham.pgcasestudy.data.ItemsRepository;
 import com.example.tuanpham.pgcasestudy.data.Story;
 
 import java.util.List;
@@ -16,14 +15,14 @@ import java.util.List;
 public class StoriesPresenter implements StoriesContract.UserActionsListener {
 
 
-    private final StoriesRepository storiesRepository;
+    private final ItemsRepository itemsRepository;
     private final StoriesContract.View itemsView;
 
-    public StoriesPresenter(@NonNull StoriesRepository storiesRepository, @NonNull StoriesContract.View itemsView) {
-        if (storiesRepository == null) {
-            throw new NullPointerException("storiesRepository can not be null");
+    public StoriesPresenter(@NonNull ItemsRepository itemsRepository, @NonNull StoriesContract.View itemsView) {
+        if (itemsRepository == null) {
+            throw new NullPointerException("itemsRepository can not be null");
         } else {
-            this.storiesRepository = storiesRepository;
+            this.itemsRepository = itemsRepository;
         }
 
         if (itemsView == null) {
@@ -36,7 +35,7 @@ public class StoriesPresenter implements StoriesContract.UserActionsListener {
     @Override
     public void getTopStories() {
         itemsView.setProgressIndicator(true);
-        storiesRepository.getTopStories(new StoriesRepository.GetTopStoryIdsCallback() {
+        itemsRepository.getTopStories(new ItemsRepository.GetTopStoryIdsCallback() {
             @Override
             public void onTopStoryIdsLoaded(List<Story> stories) {
                 itemsView.showItems(stories);
@@ -46,31 +45,13 @@ public class StoriesPresenter implements StoriesContract.UserActionsListener {
     }
 
     @Override
-    public void loadItems(boolean forceUpdate) {
-        itemsView.setProgressIndicator(true);
-
-        storiesRepository.getItems(new StoriesRepository.LoadItemsCallback() {
-            @Override
-            public void onItemsLoaded(List<Story> stories) {
-                itemsView.setProgressIndicator(false);
-                itemsView.showItems(stories);
-            }
-        });
-    }
-
-    @Override
-    public void refreshItems() {
-
-    }
-
-    @Override
     public void openItem(@Nullable Story selectedStory) {
-        itemsView.showItemDetail(selectedStory.getId() + "");
+        itemsView.showItemDetail(selectedStory);
     }
 
     @Override
     public void getStory(int storyId) {
-        storiesRepository.getStory(storyId, new StoriesRepository.GetItemCallback() {
+        itemsRepository.getStory(storyId, new ItemsRepository.GetItemCallback<Story>() {
             @Override
             public void onItemLoaded(Story story) {
                 itemsView.populateStoryDetails(story);

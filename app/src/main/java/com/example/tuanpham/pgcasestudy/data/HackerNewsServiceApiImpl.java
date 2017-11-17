@@ -1,5 +1,6 @@
 package com.example.tuanpham.pgcasestudy.data;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by tuanpham on 11/7/17.
  */
 
-public class HackerNewsServiceApiImpl implements StoriesServiceApi {
+public class HackerNewsServiceApiImpl implements HNItemsServiceApi {
 
     private static final String BASE_URL = "https://hacker-news.firebaseio.com/v0/";
 
@@ -55,10 +56,6 @@ public class HackerNewsServiceApiImpl implements StoriesServiceApi {
     }
 
     @Override
-    public void getAllItems(final ItemsServiceCallback<List<Story>> callback) {
-    }
-
-    @Override
     public void getSingleStory(int storyId, final ItemsServiceCallback<Story> callback) {
         apiEndpoint.getStory(storyId).enqueue(new Callback<Story>() {
             @Override
@@ -72,4 +69,20 @@ public class HackerNewsServiceApiImpl implements StoriesServiceApi {
             }
         });
     }
+
+    @Override
+    public void getSingleComment(@NonNull int commentID, final ItemsServiceCallback<Comment> callback) {
+        apiEndpoint.getComment(commentID).enqueue(new Callback<Comment>() {
+            @Override
+            public void onResponse(Call<Comment> call, Response<Comment> response) {
+                callback.onLoaded(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Comment> call, Throwable t) {
+
+            }
+        });
+    }
+
 }

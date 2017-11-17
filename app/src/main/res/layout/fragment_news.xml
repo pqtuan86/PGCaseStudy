@@ -6,6 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.test.tuanpham.testscenario.stories.StoriesActivityFragment"
-    tools:showIn="@layout/activity_news">
+    tools:showIn="@layout/activity_general">
 
 </android.support.constraint.ConstraintLayout>

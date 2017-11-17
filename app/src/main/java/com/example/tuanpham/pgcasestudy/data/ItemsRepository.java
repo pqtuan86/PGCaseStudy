@@ -8,14 +8,14 @@ import java.util.List;
  * Created by tuanpham on 11/4/17.
  */
 
-public interface StoriesRepository {
+public interface ItemsRepository {
 
     interface LoadItemsCallback {
         void onItemsLoaded(List<Story> stories);
     }
 
-    interface GetItemCallback {
-        void onItemLoaded(Story story);
+    interface GetItemCallback<T> {
+        void onItemLoaded(T item);
     }
 
     interface GetTopStoryIdsCallback {
@@ -26,7 +26,9 @@ public interface StoriesRepository {
 
     void getTopStories(@NonNull GetTopStoryIdsCallback callback);
 
-    void getStory(@NonNull int storyId, @NonNull GetItemCallback callback);
+    void getStory(@NonNull int storyId, @NonNull GetItemCallback<Story> callback);
+
+    void getComment(@NonNull int commentID, @NonNull GetItemCallback<Comment> callback);
 
     void refreshData();
 }

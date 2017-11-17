@@ -1,6 +1,7 @@
 package com.example.tuanpham.pgcasestudy.stories;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -11,13 +12,16 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tuanpham.pgcasestudy.Injection;
 import com.example.tuanpham.pgcasestudy.R;
+import com.example.tuanpham.pgcasestudy.comments.CommentsActivity;
 import com.example.tuanpham.pgcasestudy.data.Story;
 import com.example.tuanpham.pgcasestudy.util.UiUtils;
 
@@ -66,7 +70,7 @@ public class StoriesFragment extends Fragment implements StoriesContract.View {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_stories, container, false);
+        View view = inflater.inflate(R.layout.fragment_items, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.stories_list);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
@@ -158,6 +162,7 @@ public class StoriesFragment extends Fragment implements StoriesContract.View {
         @Override
         public void onStoryClick(Story clickedStory) {
             // Open story detail screen
+            userActionsListener.openItem(clickedStory);
         }
     };
 
@@ -194,8 +199,17 @@ public class StoriesFragment extends Fragment implements StoriesContract.View {
     }
 
     @Override
-    public void showItemDetail(String itemid) {
+    public void showItemDetail(Story story) {
         // Open story detail
+
+        if (story.getKids() != null) {
+
+            Intent intent = new Intent(getContext(), CommentsActivity.class);
+            intent.putExtra(CommentsActivity.EXTRA_COMMENT_LIST, story.getKids());
+            startActivity(intent);
+        } else {
+            Toast.makeText(getActivity(), "This story does not have comment yet", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -316,16 +330,6 @@ public class StoriesFragment extends Fragment implements StoriesContract.View {
         }
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface StoryItemListener {
         // TODO: Update argument type and name
         void onStoryClick(Story clickedStory);

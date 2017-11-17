@@ -28,6 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_story_title"
         android:layout_alignLeft="@+id/tv_story_title"
-        android:textSize="@dimen/text_s"/>
+        android:textSize="@dimen/text_s"
+        android:textColor="@color/cardview_dark_background"/>
 
 </RelativeLayout>
