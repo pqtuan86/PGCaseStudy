@@ -14,8 +14,12 @@ public interface ItemsRepository {
         void onItemsLoaded(List<Story> stories);
     }
 
-    interface GetItemCallback<T> {
-        void onItemLoaded(T item);
+    interface GetStoryCallback {
+        void onItemLoaded(Story item);
+    }
+
+    interface GetCommentCallback {
+        void onItemLoaded(Comment item);
     }
 
     interface GetTopStoryIdsCallback {
@@ -26,9 +30,9 @@ public interface ItemsRepository {
 
     void getTopStories(@NonNull GetTopStoryIdsCallback callback);
 
-    void getStory(@NonNull int storyId, @NonNull GetItemCallback<Story> callback);
+    void getStory(@NonNull int storyId, @NonNull GetStoryCallback callback);
 
-    void getComment(@NonNull int commentID, @NonNull GetItemCallback<Comment> callback);
+    void getComment(@NonNull int commentID, @NonNull GetCommentCallback callback);
 
     void refreshData();
 }

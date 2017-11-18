@@ -31,7 +31,7 @@ public class CommentsPresenter implements CommentsContract.UserActionsListener {
 
     @Override
     public void getComment(@NonNull int commentId) {
-        itemsRepository.getComment(commentId, new ItemsRepository.GetItemCallback<Comment>() {
+        itemsRepository.getComment(commentId, new ItemsRepository.GetCommentCallback() {
             @Override
             public void onItemLoaded(Comment item) {
                 itemsView.populateCommentDetails(item);
@@ -41,7 +41,7 @@ public class CommentsPresenter implements CommentsContract.UserActionsListener {
 
     @Override
     public void getReply(@NonNull final Comment ancestor, @NonNull int replyId) {
-        itemsRepository.getComment(replyId, new ItemsRepository.GetItemCallback<Comment>() {
+        itemsRepository.getComment(replyId, new ItemsRepository.GetCommentCallback() {
             @Override
             public void onItemLoaded(Comment item) {
                 itemsView.populateReplies(ancestor, item);

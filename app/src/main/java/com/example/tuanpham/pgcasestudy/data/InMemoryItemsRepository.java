@@ -34,7 +34,7 @@ public class InMemoryItemsRepository implements ItemsRepository {
     }
 
     @Override
-    public void getStory(@NonNull int storyId, @NonNull final GetItemCallback callback) {
+    public void getStory(@NonNull int storyId, @NonNull final GetStoryCallback callback) {
         HNItemsServiceApi.getSingleStory(storyId, new HNItemsServiceApi.ItemsServiceCallback<Story>() {
             @Override
             public void onLoaded(Story item) {
@@ -44,7 +44,7 @@ public class InMemoryItemsRepository implements ItemsRepository {
     }
 
     @Override
-    public void getComment(@NonNull int commentID, @NonNull final GetItemCallback callback) {
+    public void getComment(@NonNull int commentID, @NonNull final GetCommentCallback callback) {
         HNItemsServiceApi.getSingleComment(commentID, new HNItemsServiceApi.ItemsServiceCallback<Comment>() {
             @Override
             public void onLoaded(Comment item) {

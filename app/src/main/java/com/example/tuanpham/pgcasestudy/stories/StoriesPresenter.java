@@ -51,7 +51,7 @@ public class StoriesPresenter implements StoriesContract.UserActionsListener {
 
     @Override
     public void getStory(int storyId) {
-        itemsRepository.getStory(storyId, new ItemsRepository.GetItemCallback<Story>() {
+        itemsRepository.getStory(storyId, new ItemsRepository.GetStoryCallback() {
             @Override
             public void onItemLoaded(Story story) {
                 itemsView.populateStoryDetails(story);
