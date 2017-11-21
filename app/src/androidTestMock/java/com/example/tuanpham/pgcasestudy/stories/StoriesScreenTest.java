@@ -1,12 +1,16 @@
-package com.example.tuanpham.pgcasestudy;
+package com.example.tuanpham.pgcasestudy.stories;
 
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.LargeTest;
+import android.support.test.filters.SdkSuppress;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.example.tuanpham.pgcasestudy.R;
+import com.example.tuanpham.pgcasestudy.TestUtils;
 import com.example.tuanpham.pgcasestudy.stories.StoriesActivity;
 
 import org.hamcrest.Description;
@@ -19,6 +23,7 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.RecyclerViewActions.scrollTo;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
@@ -27,6 +32,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.example.tuanpham.pgcasestudy.TestUtils.getCurrentActivity;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
@@ -64,12 +70,22 @@ public class StoriesScreenTest {
         String storyTitle2 = "Tether Critical Announcement";
 
         // check story 1 is displayed on screen
-        onView(withId(R.id.stories_list)).perform(scrollTo(hasDescendant(withText(storyTitle1))));
+        onView(ViewMatchers.withId(R.id.stories_list)).perform(scrollTo(hasDescendant(withText(storyTitle1))));
         onView(withItemText(storyTitle1)).check(matches(isDisplayed()));
 
         // check story 2 is displayed on screen
         onView(withId(R.id.stories_list)).perform(scrollTo(hasDescendant(withText(storyTitle2))));
         onView(withItemText(storyTitle2)).check(matches(isDisplayed()));
     }
+
+    @Test
+    @SdkSuppress(minSdkVersion = 21) // Blinking cursor after rotation breaks this in API 19
+    public void testOrientationChange_StoriesPersist() throws Exception {
+
+        // Rotate the screen
+        TestUtils.rotateOrientation(getCurrentActivity());
+        testShowTopStories();
+    }
+
 
 }
