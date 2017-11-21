@@ -1,8 +1,8 @@
 package com.example.tuanpham.pgcasestudy;
 
-import com.example.tuanpham.pgcasestudy.data.StoriesRepository;
-import com.example.tuanpham.pgcasestudy.data.HackerNewsServiceApiImpl;
-import com.example.tuanpham.pgcasestudy.data.StoryRepositories;
+import com.example.tuanpham.pgcasestudy.data.FakeHackerNewsServiceApiImpl;
+import com.example.tuanpham.pgcasestudy.data.ItemRepositories;
+import com.example.tuanpham.pgcasestudy.data.ItemsRepository;
 
 /**
  * Created by tuanpham on 11/4/17.
@@ -10,7 +10,7 @@ import com.example.tuanpham.pgcasestudy.data.StoryRepositories;
 
 public class Injection {
 
-    public static StoriesRepository provideStoriesRepository() {
-        return StoryRepositories.getInMemoryRepoInstance(new HackerNewsServiceApiImpl());
+    public static ItemsRepository provideStoriesRepository() {
+        return ItemRepositories.getInMemoryRepoInstance(new FakeHackerNewsServiceApiImpl());
     }
 }

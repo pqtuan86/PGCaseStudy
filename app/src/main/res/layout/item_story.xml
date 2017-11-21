@@ -6,7 +6,7 @@
 
     <TextView
         android:id="@+id/tv_story_index"
-        android:layout_width="25dp"
+        android:layout_width="27dp"
         android:layout_height="wrap_content"
         android:gravity="right"
         android:textSize="@dimen/text_m"/>

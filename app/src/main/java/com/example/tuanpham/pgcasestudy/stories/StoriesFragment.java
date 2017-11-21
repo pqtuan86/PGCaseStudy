@@ -119,7 +119,8 @@ public class StoriesFragment extends Fragment implements StoriesContract.View {
         LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
         int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
         if (lastVisibleItem != -1) {
-            if ((currentCursor - lastVisibleItem) < 25) {
+            if ((currentCursor != storiesAdapter.getItemCount() - 1)
+                && (currentCursor - lastVisibleItem) < 25) {
                 getStoriesDetails();
             }
         }

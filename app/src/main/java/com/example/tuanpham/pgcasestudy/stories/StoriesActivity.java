@@ -29,11 +29,11 @@ public class StoriesActivity extends AppCompatActivity {
 
     }
 
-    private void initFragment(Fragment notesFragment) {
+    private void initFragment(Fragment storiesFragment) {
         // Add the NotesFragment to the layout
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.contentFrame, notesFragment);
+        transaction.add(R.id.contentFrame, storiesFragment);
         transaction.commit();
     }
 
