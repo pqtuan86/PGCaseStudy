@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
@@ -55,6 +56,10 @@ public class StoriesPresenterTest {
 
         verify(storiesView).setProgressIndicator(false);
         verify(storiesView).showItems(STORIES);
+
+        ArgumentCaptor<List> showStoriesArgumentCaptor = ArgumentCaptor.forClass(List.class);
+        verify(storiesView).showItems(showStoriesArgumentCaptor.capture());
+        assertTrue(showStoriesArgumentCaptor.getValue().size() == 2);
     }
 
     @Test
