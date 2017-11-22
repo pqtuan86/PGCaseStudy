@@ -19,11 +19,6 @@ public class InMemoryItemsRepository implements ItemsRepository {
     }
 
     @Override
-    public void getItems(@NonNull LoadItemsCallback callback) {
-
-    }
-
-    @Override
     public void getTopStories(@NonNull final GetTopStoryIdsCallback callback) {
         HNItemsServiceApi.getTopStories(new HNItemsServiceApi.ItemsServiceCallback<List<Story>>() {
             @Override
@@ -53,8 +48,4 @@ public class InMemoryItemsRepository implements ItemsRepository {
         });
     }
 
-    @Override
-    public void refreshData() {
-
-    }
 }

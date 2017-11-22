@@ -10,10 +10,6 @@ import java.util.List;
 
 public interface ItemsRepository {
 
-    interface LoadItemsCallback {
-        void onItemsLoaded(List<Story> stories);
-    }
-
     interface GetStoryCallback {
         void onItemLoaded(Story item);
     }
@@ -26,13 +22,9 @@ public interface ItemsRepository {
         void onTopStoryIdsLoaded(List<Story> stories);
     }
 
-    void getItems(@NonNull LoadItemsCallback callback);
-
     void getTopStories(@NonNull GetTopStoryIdsCallback callback);
 
     void getStory(@NonNull int storyId, @NonNull GetStoryCallback callback);
 
     void getComment(@NonNull int commentID, @NonNull GetCommentCallback callback);
-
-    void refreshData();
 }
