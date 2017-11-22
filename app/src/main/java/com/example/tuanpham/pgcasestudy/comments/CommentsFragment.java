@@ -186,7 +186,8 @@ public class CommentsFragment extends Fragment implements CommentsContract.View 
         public void onBindViewHolder(ViewHolder viewHolder, int position) {
             Comment comment = comments.get(position);
             if (!TextUtils.isEmpty(comment.getBy())) {
-                viewHolder.by_and_update.setText(comment.getBy() + " " + UiUtils.getLatesUpdateTime(comment.getTime()));
+                viewHolder.by_and_update.setText(comment.getBy() + " " + UiUtils.getLatestUpdateTime(System.currentTimeMillis()/1000, comment.getTime
+                        ()));
                 viewHolder.content.setText(!TextUtils.isEmpty(comment.getText()) ? Html.fromHtml(comment.getText()) : "");
                 viewHolder.addReplies(comment.getReplies());
             }
@@ -272,8 +273,8 @@ public class CommentsFragment extends Fragment implements CommentsContract.View 
                             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup
                                     .LayoutParams.WRAP_CONTENT);
                             tvBy.setLayoutParams(params);
-                            tvBy.setText("\u25BA " + reply.getBy() + " " + UiUtils.getLatesUpdateTime
-                                    (reply.getTime()));
+                            tvBy.setText("\u25BA " + reply.getBy() + " " + UiUtils.getLatestUpdateTime
+                                    (System.currentTimeMillis()/1000, reply.getTime()));
                             tvBy.setTextSize(TypedValue.COMPLEX_UNIT_PX, itemView.getResources().getDimension(R.dimen.text_s));
                             tvBy.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.grey));
                             replies_container.addView(tvBy);

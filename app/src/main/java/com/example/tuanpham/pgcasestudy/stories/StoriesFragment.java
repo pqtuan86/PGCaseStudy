@@ -12,7 +12,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -248,7 +247,7 @@ public class StoriesFragment extends Fragment implements StoriesContract.View {
                 viewHolder.title.setText(TextUtils.isEmpty(story.getTitle()) ? "" : story.getTitle());
                 String infos = (story.getScore() != null ? story.getScore() : "0") + " points"
                         + " by " + story.getBy() + " "
-                        + UiUtils.getLatesUpdateTime(story.getTime() != null ? story.getTime() : 0) + " | "
+                        + UiUtils.getLatestUpdateTime(System.currentTimeMillis()/1000, story.getTime() != null ? story.getTime() : 0) + " | "
                         + (story.getDescendants() != null ? story.getDescendants() : 0) + " comments";
                 viewHolder.description.setText(infos);
             }

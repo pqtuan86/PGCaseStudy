@@ -6,8 +6,8 @@ package com.example.tuanpham.pgcasestudy.util;
 
 public class UiUtils {
 
-    public static String getLatesUpdateTime(long time) {
-        long elapsedTime = System.currentTimeMillis() / 1000 - time;
+    public static String getLatestUpdateTime(long currentTimeInSecond, long time) {
+        long elapsedTime = currentTimeInSecond - time;
         int dates = (int) elapsedTime / (24*60*60);
 
         if (dates > 0) {
