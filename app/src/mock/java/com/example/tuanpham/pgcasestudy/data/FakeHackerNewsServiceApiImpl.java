@@ -1,17 +1,10 @@
 package com.example.tuanpham.pgcasestudy.data;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by tuanpham on 11/7/17.
@@ -20,10 +13,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class FakeHackerNewsServiceApiImpl implements HNItemsServiceApi {
 
     // TODO replace this with a new test specific data set.
-    private static final ArrayList<Story> DATA;
+    private static final ArrayList<Story> STORIES;
+    private static final ArrayList<Comment> COMMENTS;
+    private static final ArrayList<Comment> REPLIES;
 
     static {
-        DATA = new ArrayList<>(2);
+        STORIES = new ArrayList<>(2);
         addStory(15709418,
                 "rbcgerard",
                 113,
@@ -44,6 +39,36 @@ public class FakeHackerNewsServiceApiImpl implements HNItemsServiceApi {
                 "Tether Critical Announcement",
                 "story",
                 "https://tether.to/tether-critical-announcement/");
+
+        COMMENTS = new ArrayList<>(2);
+        addComment(15709763, "flightrisk",
+                Arrays.asList(15709875, 15709787),
+                15709418,
+                1510797723,
+                "Comment no. 1 content",
+                "comment");
+
+        addComment(15709530, "gok",
+                null,
+                15709418,
+                1510794659,
+                "Comment no. 2 content",
+                "comment");
+
+        REPLIES = new ArrayList<>(2);
+        addReply(15709875, "drawkbox",
+                null,
+                15709763,
+                1510799651,
+                "Reply 1 of comment 1 content",
+                "comment");
+
+        addReply(15709787, "dleslie",
+                null,
+                15709763,
+                1510798034,
+                "Reply 2 of comment 1 content",
+                "comment");
     }
 
     private static void addStory(int id, String by, int descendants, List<Integer> kids, int score, long time, String title, String type, String url) {
@@ -56,32 +81,51 @@ public class FakeHackerNewsServiceApiImpl implements HNItemsServiceApi {
         story.setTitle(title);
         story.setType(type);
         story.setUrl(url);
-        DATA.add(story);
+        STORIES.add(story);
+    }
+
+    private static void addComment(int id, String by, List<Integer> kids, int parent, long time, String text, String type) {
+        Comment comment = new Comment(id);
+        comment.setBy(by);
+        comment.setKids(kids != null ? new ArrayList<>(kids) : null);
+        comment.setParent(parent);
+        comment.setTime(time);
+        comment.setText(text);
+        comment.setType(type);
+        COMMENTS.add(comment);
+    }
+
+    private static void addReply(int id, String by, List<Integer> kids, int parent, long time, String text, String type) {
+        Comment comment = new Comment(id);
+        comment.setBy(by);
+        comment.setKids(kids != null ? new ArrayList<>(kids) : null);
+        comment.setParent(parent);
+        comment.setTime(time);
+        comment.setText(text);
+        comment.setType(type);
+        REPLIES.add(comment);
     }
 
     @Override
     public void getTopStories(final ItemsServiceCallback<List<Story>> callback) {
-        callback.onLoaded(DATA);
+        callback.onLoaded(STORIES);
     }
 
     @Override
     public void getSingleStory(int storyId, final ItemsServiceCallback<Story> callback) {
-        callback.onLoaded(DATA.get(DATA.indexOf(new Story(storyId))));
+        callback.onLoaded(STORIES.get(STORIES.indexOf(new Story(storyId))));
     }
 
     @Override
     public void getSingleComment(@NonNull int commentID, final ItemsServiceCallback<Comment> callback) {
-//        apiEndpoint.getComment(commentID).enqueue(new Callback<Comment>() {
-//            @Override
-//            public void onResponse(Call<Comment> call, Response<Comment> response) {
-//                callback.onLoaded(response.body());
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Comment> call, Throwable t) {
-//
-//            }
-//        });
+        Comment comment = new Comment(commentID);
+        if (COMMENTS.contains(comment)) {
+            callback.onLoaded(COMMENTS.get(COMMENTS.indexOf(comment)));
+        } else if (REPLIES.contains(comment)) {
+            callback.onLoaded(REPLIES.get(REPLIES.indexOf(comment)));
+        } else {
+            callback.onLoaded(null);
+        }
     }
 
 }

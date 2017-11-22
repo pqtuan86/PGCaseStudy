@@ -1,5 +1,6 @@
-package com.example.tuanpham.pgcasestudy.stories;
+package com.example.tuanpham.pgcasestudy.comments;
 
+import android.content.Intent;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.LargeTest;
 import android.support.test.filters.SdkSuppress;
@@ -16,13 +17,18 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.RecyclerViewActions.scrollTo;
+import static android.support.test.espresso.contrib.RecyclerViewActions.scrollToPosition;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
@@ -39,7 +45,10 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class StoriesScreenTest {
+public class CommentsScreenTest {
+
+    private static final ArrayList<Integer> commentIds = new ArrayList<>(Arrays.asList(15709763, 15709530));
+
 
     private Matcher<View> withItemText(final String itemText) {
         checkArgument(!TextUtils.isEmpty(itemText), "itemText cannot be null or empty");
@@ -59,20 +68,32 @@ public class StoriesScreenTest {
     }
 
     @Rule
-    public ActivityTestRule<StoriesActivity> storiesActivityTestRule = new ActivityTestRule<>(StoriesActivity.class);
+    public ActivityTestRule<CommentsActivity> commentsActivityTestRule = new ActivityTestRule<>(CommentsActivity.class, true, false);
+
+    @Before
+    public void intentWithStubbedCommentIds() {
+        Intent startIntent = new Intent();
+        startIntent.putIntegerArrayListExtra(CommentsActivity.EXTRA_COMMENT_LIST, commentIds);
+        commentsActivityTestRule.launchActivity(startIntent);
+    }
 
     @Test
-    public void testShowTopStories() throws Exception {
-        String storyTitle1 = "New Orleans man locked up nearly 8 years awaiting trial, then case gets tossed";
-        String storyTitle2 = "Tether Critical Announcement";
+    public void testShowComments() throws Exception {
+        String comment1Content = "Comment no. 1 content";
+        String comment2Content = "Comment no. 2 content";
+        String reply1Content = "Reply 1 of comment 1 content";
 
-        // check story 1 is displayed on screen
-        onView(ViewMatchers.withId(R.id.stories_list)).perform(scrollTo(hasDescendant(withText(storyTitle1))));
-        onView(withItemText(storyTitle1)).check(matches(isDisplayed()));
+        // check comment 1 is displayed on screen
+        onView(ViewMatchers.withId(R.id.stories_list)).perform(scrollTo(hasDescendant(withText(comment1Content))));
+        onView(withItemText(comment1Content)).check(matches(isDisplayed()));
 
         // check story 2 is displayed on screen
-        onView(withId(R.id.stories_list)).perform(scrollTo(hasDescendant(withText(storyTitle2))));
-        onView(withItemText(storyTitle2)).check(matches(isDisplayed()));
+        onView(withId(R.id.stories_list)).perform(scrollTo(hasDescendant(withText(comment2Content))));
+        onView(withItemText(comment2Content)).check(matches(isDisplayed()));
+
+        // check reply 1 of comment 1 is displayed on screen
+        onView(withId(R.id.stories_list)).perform(scrollToPosition(1));
+        onView(withItemText(reply1Content)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -81,7 +102,7 @@ public class StoriesScreenTest {
 
         // Rotate the screen
         TestUtils.rotateOrientation(getCurrentActivity());
-        testShowTopStories();
+        testShowComments();
     }
 
 
