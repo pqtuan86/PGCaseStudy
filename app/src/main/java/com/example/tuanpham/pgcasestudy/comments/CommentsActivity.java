@@ -31,6 +31,7 @@ public class CommentsActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayHomeAsUpEnabled(true);
+        setTitle("Story Comments");
 
         if (null == savedInstanceState) {
             ArrayList<Integer> commentIdList = getIntent().getExtras().getIntegerArrayList(EXTRA_COMMENT_LIST);

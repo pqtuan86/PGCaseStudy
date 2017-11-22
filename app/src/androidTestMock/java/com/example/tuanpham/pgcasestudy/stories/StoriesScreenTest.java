@@ -8,6 +8,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.tuanpham.pgcasestudy.R;
 import com.example.tuanpham.pgcasestudy.TestUtils;
@@ -21,16 +22,21 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.RecyclerViewActions.scrollTo;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.example.tuanpham.pgcasestudy.TestUtils.getCurrentActivity;
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.instanceOf;
 
 /**
  * Created by tuanpham on 11/20/17.
@@ -84,5 +90,24 @@ public class StoriesScreenTest {
         testShowTopStories();
     }
 
+    @Test
+    public void testAppNavigation() throws Exception {
+        String storyTitle1 = "New Orleans man locked up nearly 8 years awaiting trial, then case gets tossed";
 
+        // Click on the story on the list
+        onView(withText(storyTitle1)).perform(click());
+
+        // Verify screen is Comments screen
+        onView(allOf(instanceOf(TextView.class), withParent(withId(R.id.toolbar))))
+                .check(matches(withText("Story Comments")));
+
+        // Click on back
+        String navigateUpDesc = storiesActivityTestRule.getActivity()
+                .getString(android.support.v7.appcompat.R.string.abc_action_bar_up_description);
+        onView(withContentDescription(navigateUpDesc)).perform(click());
+
+        // Verify screen is Top Stories screen
+        onView(allOf(instanceOf(TextView.class), withParent(withId(R.id.toolbar))))
+                .check(matches(withText("Top Stories")));
+    }
 }

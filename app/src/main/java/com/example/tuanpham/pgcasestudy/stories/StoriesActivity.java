@@ -22,6 +22,7 @@ public class StoriesActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         ab.setHomeAsUpIndicator(R.drawable.ic_menu);
         ab.setDisplayHomeAsUpEnabled(true);
+        setTitle("Top Stories");
 
         if (null == savedInstanceState) {
             initFragment(StoriesFragment.newInstance());
