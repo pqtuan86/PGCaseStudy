@@ -9,23 +9,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * Created by tuanpham on 11/4/17.
+ * Created by tuanpham on 12/20/17.
  */
 
-public class Story implements Serializable, Parcelable {
-    /*
-    "by" : "dhouston",
-            "descendants" : 71,
-            "id" : 8863,
-            "kids" : [ 8952, 9224, 8917, 8884, 8887, 8943, 8869, 8958, 9005, 9671, 8940, 9067, 8908, 9055, 8865, 8881, 8872, 8873, 8955, 10403, 8903, 8928, 9125, 8998, 8901, 8902, 8907, 8894, 8878, 8870, 8980, 8934, 8876 ],
-            "score" : 111,
-            "time" : 1175714200,
-            "title" : "My YC app: Dropbox - Throw away your USB drive",
-            "type" : "story",
-            "url" : "http://www.getdropbox.com/u/2/screencast.html"
-    */
+public class Item implements Serializable, Parcelable {
 
-    private static final long serialVersionUID = 1L;
     @SerializedName("by")
     private String by;
     @SerializedName("descendants")
@@ -44,12 +32,33 @@ public class Story implements Serializable, Parcelable {
     private String type;
     @SerializedName("url")
     private String url;
+    @SerializedName("parent")
+    private int parent;
+    @SerializedName("text")
+    private String text;
 
-    public Story(int id) {
+    private ArrayList<Item> replies;
+
+    public Item(int id) {
         this.id = id;
+        replies = new ArrayList<>();
     }
 
-    public Story(Parcel in) {
+    public Item(Item item) {
+        this.id = item.getId();
+        this.by = item.getBy();
+        this.kids = new ArrayList<>();
+        if (item.getKids() != null) {
+            this.kids.addAll(item.getKids());
+            replies = new ArrayList<>();
+        }
+        this.parent = item.getParent();
+        this.text = item.getText();
+        this.time = item.getTime();
+        this.type = item.getType();
+    }
+
+    public Item(Parcel in) {
         by = in.readString();
         descendants = in.readInt();
         id = in.readInt();
@@ -59,6 +68,13 @@ public class Story implements Serializable, Parcelable {
         } else {
             kids = null;
         }
+        score = in.readInt();
+        time = in.readLong();
+        title = in.readString();
+        type = in.readString();
+        url = in.readString();
+        parent = in.readInt();
+        text = in.readString();
     }
 
     public String getBy() {
@@ -133,11 +149,27 @@ public class Story implements Serializable, Parcelable {
         this.url = url;
     }
 
+    public int getParent() {
+        return parent;
+    }
+
+    public void setParent(int parent) {
+        this.parent = parent;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Story) {
-            Story story = (Story) obj;
-            if (this.id == story.getId()) {
+        if (obj instanceof Item) {
+            Item item = (Item) obj;
+            if (this.id == item.getId()) {
                 return true;
             }
         }
@@ -165,17 +197,19 @@ public class Story implements Serializable, Parcelable {
         dest.writeString(title);
         dest.writeString(type);
         dest.writeString(url);
+        dest.writeInt(parent);
+        dest.writeString(text);
     }
 
-    public static final Parcelable.Creator<Story> CREATOR = new Parcelable.Creator<Story>() {
+    public static final Parcelable.Creator<Item> CREATOR = new Parcelable.Creator<Item>() {
         @Override
-        public Story createFromParcel(Parcel in) {
-            return new Story(in);
+        public Item createFromParcel(Parcel in) {
+            return new Item(in);
         }
 
         @Override
-        public Story[] newArray(int size) {
-            return new Story[size];
+        public Item[] newArray(int size) {
+            return new Item[size];
         }
     };
 }

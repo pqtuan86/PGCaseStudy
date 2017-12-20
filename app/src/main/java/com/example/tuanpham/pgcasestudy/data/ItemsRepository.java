@@ -11,15 +11,15 @@ import java.util.List;
 public interface ItemsRepository {
 
     interface GetStoryCallback {
-        void onItemLoaded(Story item);
+        void onItemLoaded(Item item);
     }
 
     interface GetCommentCallback {
-        void onItemLoaded(Comment item);
+        void onItemLoaded(Item item);
     }
 
     interface GetTopStoryIdsCallback {
-        void onTopStoryIdsLoaded(List<Story> stories);
+        void onTopStoryIdsLoaded(List<Item> stories);
     }
 
     void getTopStories(@NonNull GetTopStoryIdsCallback callback);

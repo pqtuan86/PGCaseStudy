@@ -1,7 +1,6 @@
 package com.example.tuanpham.pgcasestudy.stories;
 
 import com.example.tuanpham.pgcasestudy.data.ItemsRepository;
-import com.example.tuanpham.pgcasestudy.data.Story;
 
 import org.junit.Before;
 import org.junit.Test;

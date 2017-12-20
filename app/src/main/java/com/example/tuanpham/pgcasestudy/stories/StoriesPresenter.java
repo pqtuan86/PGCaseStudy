@@ -3,8 +3,8 @@ package com.example.tuanpham.pgcasestudy.stories;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.example.tuanpham.pgcasestudy.data.Item;
 import com.example.tuanpham.pgcasestudy.data.ItemsRepository;
-import com.example.tuanpham.pgcasestudy.data.Story;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class StoriesPresenter implements StoriesContract.UserActionsListener {
         itemsView.setProgressIndicator(true);
         itemsRepository.getTopStories(new ItemsRepository.GetTopStoryIdsCallback() {
             @Override
-            public void onTopStoryIdsLoaded(List<Story> stories) {
+            public void onTopStoryIdsLoaded(List<Item> stories) {
                 itemsView.showItems(stories);
                 itemsView.setProgressIndicator(false);
             }
@@ -45,7 +45,7 @@ public class StoriesPresenter implements StoriesContract.UserActionsListener {
     }
 
     @Override
-    public void openItem(@Nullable Story selectedStory) {
+    public void openItem(@Nullable Item selectedStory) {
         itemsView.showItemDetail(selectedStory);
     }
 
@@ -53,7 +53,7 @@ public class StoriesPresenter implements StoriesContract.UserActionsListener {
     public void getStory(int storyId) {
         itemsRepository.getStory(storyId, new ItemsRepository.GetStoryCallback() {
             @Override
-            public void onItemLoaded(Story story) {
+            public void onItemLoaded(Item story) {
                 itemsView.populateStoryDetails(story);
             }
         });

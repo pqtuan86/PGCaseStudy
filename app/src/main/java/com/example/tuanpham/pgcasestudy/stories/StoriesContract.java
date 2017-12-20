@@ -2,7 +2,7 @@ package com.example.tuanpham.pgcasestudy.stories;
 
 import android.support.annotation.Nullable;
 
-import com.example.tuanpham.pgcasestudy.data.Story;
+import com.example.tuanpham.pgcasestudy.data.Item;
 
 import java.util.List;
 
@@ -15,18 +15,18 @@ public interface StoriesContract {
     interface View {
         void setProgressIndicator(boolean active);
 
-        void showItems(List<Story> stories);
+        void showItems(List<Item> stories);
 
-        void showItemDetail(Story story);
+        void showItemDetail(Item story);
 
-        void populateStoryDetails(Story story);
+        void populateStoryDetails(Item story);
     }
 
     interface UserActionsListener {
 
         void getTopStories();
 
-        void openItem(@Nullable Story selectedStory);
+        void openItem(@Nullable Item selectedStory);
 
         void getStory(int storyId);
     }

@@ -20,19 +20,21 @@ public class HackerNewsServiceApiImpl implements HNItemsServiceApi {
 
     private static final String BASE_URL = "https://hacker-news.firebaseio.com/v0/";
 
-    private HackerNewsServiceApiEndpoint apiEndpoint;
+    private static HackerNewsServiceApiEndpoint apiEndpoint = null;
 
     public HackerNewsServiceApiImpl() {
-        Retrofit retrofit = new Retrofit.Builder()
-                                .baseUrl(BASE_URL)
-                                .addConverterFactory(GsonConverterFactory.create())
-                                .build();
+        if (apiEndpoint == null) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
 
-        apiEndpoint = retrofit.create(HackerNewsServiceApiEndpoint.class);
+            apiEndpoint = retrofit.create(HackerNewsServiceApiEndpoint.class);
+        }
     }
 
     @Override
-    public void getTopStories(final ItemsServiceCallback<List<Story>> callback) {
+    public void getTopStories(final ItemsServiceCallback<List<Item>> callback) {
         apiEndpoint.getTopStories().enqueue(new Callback<int[]>() {
             @Override
             public void onResponse(Call<int[]> call, Response<int[]> response) {
@@ -46,40 +48,40 @@ public class HackerNewsServiceApiImpl implements HNItemsServiceApi {
         });
     }
 
-    private List<Story> toStoriesFromIds(int[] ids) {
-        List<Story> stories = new ArrayList<>(ids.length);
+    private List<Item> toStoriesFromIds(int[] ids) {
+        List<Item> stories = new ArrayList<>(ids.length);
         for (int id : ids) {
-            Story story = new Story(id);
+            Item story = new Item(id);
             stories.add(story);
         }
         return stories;
     }
 
     @Override
-    public void getSingleStory(int storyId, final ItemsServiceCallback<Story> callback) {
-        apiEndpoint.getStory(storyId).enqueue(new Callback<Story>() {
+    public void getSingleStory(int storyId, final ItemsServiceCallback<Item> callback) {
+        apiEndpoint.getStory(storyId).enqueue(new Callback<Item>() {
             @Override
-            public void onResponse(Call<Story> call, Response<Story> response) {
+            public void onResponse(Call<Item> call, Response<Item> response) {
                 callback.onLoaded(response.body());
             }
 
             @Override
-            public void onFailure(Call<Story> call, Throwable t) {
+            public void onFailure(Call<Item> call, Throwable t) {
 
             }
         });
     }
 
     @Override
-    public void getSingleComment(@NonNull int commentID, final ItemsServiceCallback<Comment> callback) {
-        apiEndpoint.getComment(commentID).enqueue(new Callback<Comment>() {
+    public void getSingleComment(@NonNull int commentID, final ItemsServiceCallback<Item> callback) {
+        apiEndpoint.getComment(commentID).enqueue(new Callback<Item>() {
             @Override
-            public void onResponse(Call<Comment> call, Response<Comment> response) {
+            public void onResponse(Call<Item> call, Response<Item> response) {
                 callback.onLoaded(response.body());
             }
 
             @Override
-            public void onFailure(Call<Comment> call, Throwable t) {
+            public void onFailure(Call<Item> call, Throwable t) {
 
             }
         });

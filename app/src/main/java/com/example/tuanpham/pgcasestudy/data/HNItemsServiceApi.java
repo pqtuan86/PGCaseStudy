@@ -14,10 +14,10 @@ public interface HNItemsServiceApi {
         void onLoaded(T items);
     }
 
-    void getTopStories(ItemsServiceCallback<List<Story>> callback);
+    void getTopStories(ItemsServiceCallback<List<Item>> callback);
 
-    void getSingleStory(int storyId, ItemsServiceCallback<Story> callback);
+    void getSingleStory(int storyId, ItemsServiceCallback<Item> callback);
 
-    void getSingleComment(@NonNull int commentID, ItemsServiceCallback<Comment> callback);
+    void getSingleComment(@NonNull int commentID, ItemsServiceCallback<Item> callback);
 
 }

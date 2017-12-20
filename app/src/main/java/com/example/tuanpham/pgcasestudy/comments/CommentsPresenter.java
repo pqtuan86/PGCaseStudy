@@ -2,7 +2,7 @@ package com.example.tuanpham.pgcasestudy.comments;
 
 import android.support.annotation.NonNull;
 
-import com.example.tuanpham.pgcasestudy.data.Comment;
+import com.example.tuanpham.pgcasestudy.data.Item;
 import com.example.tuanpham.pgcasestudy.data.ItemsRepository;
 
 /**
@@ -33,17 +33,17 @@ public class CommentsPresenter implements CommentsContract.UserActionsListener {
     public void getComment(@NonNull int commentId) {
         itemsRepository.getComment(commentId, new ItemsRepository.GetCommentCallback() {
             @Override
-            public void onItemLoaded(Comment item) {
+            public void onItemLoaded(Item item) {
                 itemsView.populateCommentDetails(item);
             }
         });
     }
 
     @Override
-    public void getReply(@NonNull final Comment ancestor, @NonNull int replyId) {
+    public void getReply(@NonNull final Item ancestor, @NonNull int replyId) {
         itemsRepository.getComment(replyId, new ItemsRepository.GetCommentCallback() {
             @Override
-            public void onItemLoaded(Comment item) {
+            public void onItemLoaded(Item item) {
                 itemsView.populateReplies(ancestor, item);
             }
         });

@@ -1,6 +1,5 @@
 package com.example.tuanpham.pgcasestudy.comments;
 
-import com.example.tuanpham.pgcasestudy.data.Comment;
 import com.example.tuanpham.pgcasestudy.data.ItemsRepository;
 
 import org.junit.Before;

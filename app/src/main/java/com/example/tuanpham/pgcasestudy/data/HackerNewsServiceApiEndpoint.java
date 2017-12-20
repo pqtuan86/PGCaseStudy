@@ -14,9 +14,9 @@ public interface HackerNewsServiceApiEndpoint {
     Call<int[]> getTopStories();
 
     @GET("item/{storyId}.json")
-    Call<Story> getStory(@Path("storyId") int storyId);
+    Call<Item> getStory(@Path("storyId") int storyId);
 
     @GET("item/{commentId}.json")
-    Call<Comment> getComment(@Path("commentId") int commentId);
+    Call<Item> getComment(@Path("commentId") int commentId);
 
 }
